@@ -66,6 +66,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     // get the params id
     let id = parseInt(this.route.snapshot.params['id']);
 
+    // get single country
+    this.olympicService.getCountry(id).subscribe((country) =>{
+      console.log(country); // affiche {id, country, participations} (lors de la navigation seulement), affiche undefined puis {id, country, participations} (lorsque je rafraichis la page)
+      
+    })
+
     // get all countries 
     this.olympicService.getOlympics().subscribe((olympicData) => {
       if (olympicData.length > 0) {
@@ -127,16 +133,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     })
 
 
-
     /**
      * Observe current window format : "desktop" | "tablet" | "phone" | undefined
      */
     this.responsiveService.observeBreakpoint().subscribe(() => {
       this.currentBreakpoint = this.responsiveService.breakpointChanged();
     });    
-
-
-    
   }
 
   ngOnDestroy(): void {
