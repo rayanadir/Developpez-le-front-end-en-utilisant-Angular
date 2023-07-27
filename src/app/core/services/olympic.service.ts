@@ -45,14 +45,28 @@ export class OlympicService {
   /**
    * Get a country data by its id
    * @param id the id of the country
-   * @returns 
+   * @returns Observable<Olympic | undefined>
    */
-  getCountry(id: number): Observable<Olympic| "loading"| "not_found"> {
-    return this.olympics$.pipe(map((countries) => {
+  getCountry(id: number): Observable<Olympic | undefined> {
+    return this.olympics$.asObservable().pipe(map((countries) => {
+      if(countries.length>0)
+        return countries.find((country) => country.id==id);
+      return;
+    }))
+  }
+
+  /**
+   * Check if the country exists
+   * @param id the id of the country
+   * @returns Observable<Olympic | "not_found" | undefined>
+   */
+  checkCountry(id:number) : Observable<Olympic | "not_found" | undefined> {
+    return this.olympics$.asObservable().pipe(map((countries) => {
       if(countries.length>0)
         return countries.find((country) => country.id==id) || "not_found";
-      return "loading";
+      return undefined;
     }))
+   
   }
 
   /**
