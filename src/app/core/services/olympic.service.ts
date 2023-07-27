@@ -9,7 +9,7 @@ import { Olympic } from '../models/Olympic';
 })
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
-  private olympics$: BehaviorSubject<Olympic[]> = new BehaviorSubject<Olympic[]>([]);
+  private olympics$ = new BehaviorSubject<Olympic[]>([]);
   public errors: string[] = [];
   constructor(private http: HttpClient) { }
 
@@ -47,9 +47,11 @@ export class OlympicService {
    * @param id the id of the country
    * @returns 
    */
-  getCountry(id: number): Observable<Olympic | undefined> {
-    return this.olympics$.asObservable().pipe(map((countries) => {
-        return countries.find(country => country.id == id);
+  getCountry(id: number): Observable<Olympic| "loading"| "not_found"> {
+    return this.olympics$.pipe(map((countries) => {
+      if(countries.length>0)
+        return countries.find((country) => country.id==id) || "not_found";
+      return "loading";
     }))
   }
 
